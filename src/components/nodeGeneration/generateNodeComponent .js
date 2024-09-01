@@ -1,13 +1,16 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { Handle, Position } from "reactflow";
 import {
-  TextField,
-  FormControlLabel,
+  Input,
+  FormControl,
+  FormLabel,
   Checkbox,
-  MenuItem,
-  Button,
-} from "@mui/material";
-import { Option, Select } from "@mui/joy";
+  Typography,
+  Box,
+  Select,
+  Option,
+} from "@mui/joy";
+import { FormControlLabel } from "@mui/material";
 
 export const generateNodeComponent = (nodeDef, updateNodeData) => {
   return ({ id, data, selected }) => {
@@ -24,55 +27,56 @@ export const generateNodeComponent = (nodeDef, updateNodeData) => {
       }));
     }, []);
 
-    console.log(nodeDef);
-
     return (
-      <div
+      <Box
         key={nodeDef}
-        style={{
-          padding: 10,
+        sx={{
+          padding: 2,
           border: selected ? "2px solid #0074D9" : "1px solid #bbb",
-          borderRadius: 5,
-          backgroundColor: "#fff",
-          minWidth: 200,
+          borderRadius: "10px",
+          backgroundColor: "#f7f9fc",
+          minWidth: 240,
+          minHeight: 200,
+          boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
         }}
       >
-        <strong>{nodeDef.label}</strong>
+        <Typography level="h6" sx={{ mb: 2 }}>
+          {nodeDef.label}
+        </Typography>
         {nodeDef.fields.map((field) => {
           switch (field.type) {
             case "text":
               return (
-                <TextField
-                  key={field.name}
-                  label={field.name}
-                  value={nodeData[field.name] || ""}
-                  onChange={(e) => handleChange(field.name, e.target.value)}
-                  variant="outlined"
-                  size="small"
-                  fullWidth
-                  margin="dense"
-                />
+                <FormControl key={field.name} sx={{ mb: 2 }}>
+                  <FormLabel>{field.name}</FormLabel>
+                  <Input
+                    value={nodeData[field.name] || ""}
+                    onChange={(e) => handleChange(field.name, e.target.value)}
+                    variant="outlined"
+                    size="sm"
+                    fullWidth
+                  />
+                </FormControl>
               );
             case "select":
               return (
-                <Select
-                  key={field.name}
-                  label={field.name}
-                  value={nodeData[field.name] || ""}
-                  onChange={(e) => handleChange(field.name, e.target.value)}
-                  variant="outlined"
-                  size="small"
-                  fullWidth
-                  margin="dense"
-                >
-                  {field.options.map((option) => (
-                    <Option value={option}>{option}</Option>
-
-                    //   <MenuItem key={option} value={option}>
-                    //   {option}
-                    // </MenuItem>
-                  ))}
-                </Select>
+                <FormControl key={field.name} sx={{ mb: 2 }}>
+                  <FormLabel>{field.name}</FormLabel>
+                  <Select
+                    value={nodeData[field.name] || ""}
+                    onChange={(e, newValue) =>
+                      handleChange(field.name, newValue)
+                    }
+                    size="sm"
+                    fullWidth
+                  >
+                    {field.options.map((option) => (
+                      <Option value={option} key={option}>
+                        {option}
+                      </Option>
+                    ))}
+                  </Select>
+                </FormControl>
               );
             case "checkbox":
               return (
@@ -87,6 +91,7 @@ export const generateNodeComponent = (nodeDef, updateNodeData) => {
                     />
                   }
                   label={field.name}
+                  sx={{ mb: 2 }}
                 />
               );
             default:
@@ -101,7 +106,7 @@ export const generateNodeComponent = (nodeDef, updateNodeData) => {
               position={Position[handle.position]}
             />
           ))}
-      </div>
+      </Box>
     );
   };
 };
