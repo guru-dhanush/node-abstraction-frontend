@@ -24,7 +24,6 @@ export const SubmitButton = () => {
         body: JSON.stringify({ nodes, edges }),
       });
       const data = await response.json();
-      console.log(data);
 
       setAlert({
         variant: "soft",

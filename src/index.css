@@ -41,3 +41,17 @@ code {
   justify-content: center;
   flex-direction: column;
 }
+
+/* PipelineToolbar.css */
+
+.pipeline-toolbar {
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.node-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}

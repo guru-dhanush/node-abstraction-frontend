@@ -3,7 +3,7 @@ import ReactFlow, { Controls, Background, MiniMap } from "reactflow";
 import "reactflow/dist/style.css";
 import { useStore } from "./store";
 import { shallow } from "zustand/shallow";
-import { generateNodeComponent } from "./components/nodeGeneration/generateNodeComponent ";
+import { generateNodeComponent } from "./components/nodeGeneration/GenerateNode ";
 
 const gridSize = 20;
 const proOptions = { hideAttribution: true };
@@ -41,7 +41,6 @@ export const PipelineUI = ({ nodeDefinitions }) => {
     });
     return types;
   }, [nodeDefinitions, updateNodeData]);
-  console.log(nodeTypes);
 
   const onDrop = useCallback(
     (event) => {
@@ -59,7 +58,7 @@ export const PipelineUI = ({ nodeDefinitions }) => {
         y: event.clientY - reactFlowBounds.top,
       });
 
-      const nodeID = getNodeID(nodeType); // Ensure this generates a unique ID
+      const nodeID = getNodeID(nodeType);
 
       const initialData = { label: nodeType };
       nodeDefinitions.forEach((nodeDef) => {
@@ -77,7 +76,7 @@ export const PipelineUI = ({ nodeDefinitions }) => {
         data: initialData,
       };
 
-      addNode(newNode); // Ensure addNode adds to the list and does not replace it
+      addNode(newNode);
     },
     [reactFlowInstance, getNodeID, addNode, nodeDefinitions]
   );

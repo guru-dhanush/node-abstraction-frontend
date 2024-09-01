@@ -3,27 +3,15 @@ import { DraggableNode } from "./draggableNode";
 import Button from "@mui/joy/Button";
 import Add from "@mui/icons-material/Add";
 import { useState } from "react";
-import DynamicNodeForm from "./components/nodeGeneration/DynamicNodeForm";
 import { SubmitButton } from "./submit";
+import DynamicNodeForm from "./components/nodeGeneration/NodeForm";
 
 export const PipelineToolbar = ({ nodeDefinitions, onSubmit }) => {
   const [open, setOpen] = useState(false);
 
   return (
-    <div
-      style={{
-        padding: "10px",
-        display: "flex",
-        justifyContent: "space-between",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          gap: "10px",
-        }}
-      >
+    <div className="pipeline-toolbar">
+      <div className="node-container">
         <Button
           variant="outlined"
           color="neutral"
