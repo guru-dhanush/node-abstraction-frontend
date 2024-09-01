@@ -7,15 +7,22 @@ import { useNodeDefinitions } from "./hooks/useNodeDefinitions";
 function App() {
   const [nodeDefinitions, setNodeDefinitions] = useState([
     {
-      type: "customInput",
-      label: "Input",
+      type: "Info",
+      label: "Customer Info",
       fields: [
-        { name: "inputName", type: "text", default: "" },
+        { name: "First Name", type: "text", default: "" },
         {
-          name: "inputType",
+          name: "File",
           type: "select",
           options: ["Text", "File"],
           default: "Text",
+        },
+      ],
+      handles: [
+        {
+          name: "LLM",
+          type: "target",
+          position: "Right",
         },
       ],
     },
@@ -29,7 +36,6 @@ function App() {
         onSubmit={handleAddNodeDefinition}
       />
       <PipelineUI nodeDefinitions={nodeDefinitions} />
-      <SubmitButton />
     </div>
   );
 }

@@ -11,13 +11,20 @@ import {
 export const useStore = create((set, get) => ({
   nodes: [],
   edges: [],
-  updateNodeData: (id, newData) =>
-    set((state) => {
-      const nodes = state.nodes.map((node) =>
-        node.id === id ? { ...node, data: newData } : node
-      );
-      return { nodes };
-    }),
+  updateNodeData: (nodeId, newHandle) => {
+    set({
+      nodes: get().nodes.map((node) => {
+        if (node.id === nodeId) {
+          return {
+            ...node,
+            handles: [...(node.handles || []), newHandle],
+          };
+        }
+        return node;
+      }),
+    });
+  },
+
   getNodeID: (type) => {
     const newIDs = { ...get().nodeIDs };
     if (newIDs[type] === undefined) {
@@ -66,4 +73,9 @@ export const useStore = create((set, get) => ({
       }),
     });
   },
+
+
+
 }));
+
+

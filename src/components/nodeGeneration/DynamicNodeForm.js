@@ -11,7 +11,7 @@ import {
   Input,
 } from "@mui/joy";
 
-const DynamicNodeForm = ({ onSubmit }) => {
+const DynamicNodeForm = ({ onSubmit, setOpen }) => {
   const [nodeType, setNodeType] = useState("");
   const [label, setLabel] = useState("");
   const [fields, setFields] = useState([]);
@@ -20,24 +20,21 @@ const DynamicNodeForm = ({ onSubmit }) => {
   const handleAddField = () => {
     setFields([
       ...fields,
-      { name: "", type: "text", options: [], default: "" },
+      { name: "", type: "textArea", options: [], default: "" },
     ]);
   };
 
   const handleAddHandle = () => {
-    setHandles([
-      ...handles,
-      { type: "source", position: "Right" }, // Default handle settings
-    ]);
+    setHandles([...handles, { type: "source", position: "Right", name: "" }]);
   };
 
-  const handleFieldChange = (index, key, value, newvalue) => {
+  const handleFieldChange = (index, key, value) => {
     const newFields = [...fields];
     newFields[index][key] = value;
     setFields(newFields);
   };
 
-  const handleHandleChange = (index, key, value, newvalue) => {
+  const handleHandleChange = (index, key, value) => {
     const newHandles = [...handles];
     newHandles[index][key] = value;
     setHandles(newHandles);
@@ -50,9 +47,11 @@ const DynamicNodeForm = ({ onSubmit }) => {
       fields,
       handles,
     };
-
+    setOpen(false);
     onSubmit(newNode);
   };
+
+  const isSubmitDisabled = !nodeType || !label;
 
   return (
     <Box>
@@ -83,7 +82,7 @@ const DynamicNodeForm = ({ onSubmit }) => {
                 handleFieldChange(index, "type", newvalue)
               }
             >
-              <Option value="text">Text</Option>
+              <Option value="textArea">Text Area</Option>
               <Option value="select">Select</Option>
               <Option value="checkbox">Checkbox</Option>
             </Select>
@@ -111,7 +110,11 @@ const DynamicNodeForm = ({ onSubmit }) => {
         </Box>
       ))}
       <Box sx={{ marginY: 2 }}>
-        <Button variant="outlined"  onClick={handleAddField} sx={{ margin: 2 }}>
+        <Button
+          variant="outlined"
+          onClick={handleAddField}
+          sx={{ margin: "2 0" }}
+        >
           Add Field
         </Button>
       </Box>
@@ -120,6 +123,16 @@ const DynamicNodeForm = ({ onSubmit }) => {
       <FormLabel sx={{ marginY: 2 }}>Handles</FormLabel>
       {handles.map((handle, index) => (
         <Box key={index} sx={{ marginBottom: 2 }}>
+          <FormControl fullWidth sx={{ marginY: 2 }}>
+            <FormLabel>Handle Name</FormLabel>{" "}
+            {/* Added input for handle name */}
+            <Input
+              value={handle.name}
+              onChange={(e) =>
+                handleHandleChange(index, "name", e.target.value)
+              }
+            />
+          </FormControl>
           <FormControl fullWidth sx={{ marginY: 2 }}>
             <FormLabel>Handle Type</FormLabel>
             <Select
@@ -149,14 +162,22 @@ const DynamicNodeForm = ({ onSubmit }) => {
         </Box>
       ))}
       <Box sx={{ marginY: 2 }}>
-        <Button variant="outlined"  onClick={handleAddHandle} sx={{ margin: 2 }}>
+        <Button
+          variant="outlined"
+          onClick={handleAddHandle}
+          sx={{ margin: "2" }}
+        >
           Add Handle
         </Button>
       </Box>
       <Box
         sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
       >
-        <Button variant="solid" color="secondary" onClick={handleSubmit}>
+        <Button
+          variant="solid"
+          onClick={handleSubmit}
+          disabled={isSubmitDisabled} // Disable the button if nodeType or label is empty
+        >
           Create Node
         </Button>
       </Box>

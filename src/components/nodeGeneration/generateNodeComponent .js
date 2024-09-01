@@ -11,14 +11,24 @@ import {
   Option,
 } from "@mui/joy";
 import { FormControlLabel } from "@mui/material";
+import { useStore } from "../../store";
 
-export const generateNodeComponent = (nodeDef, updateNodeData) => {
+export const generateNodeComponent = (nodeDef) => {
   return ({ id, data, selected }) => {
     const [nodeData, setNodeData] = useState(data);
+    const [handles, setHandles] = useState(null);
+
+    const { nodes, edges, updateNodeData } = useStore((state) => ({
+      nodes: state.nodes,
+      edges: state.edges,
+      updateNodeData: state.updateNodeData,
+    }));
 
     useEffect(() => {
-      updateNodeData(id, nodeData);
-    }, [id, nodeData, updateNodeData]);
+      if (handles) {
+        updateNodeData(id, handles);
+      }
+    }, [id, handles]);
 
     const handleChange = useCallback((fieldName, value) => {
       setNodeData((prevData) => ({
@@ -26,6 +36,34 @@ export const generateNodeComponent = (nodeDef, updateNodeData) => {
         [fieldName]: value,
       }));
     }, []);
+
+    // Function to extract variables from the text
+    const extractVariables = (text) => {
+      const variableRegex = /{{\s*(\w+)\s*}}/g;
+      const variables = [];
+      let match;
+      while ((match = variableRegex.exec(text)) !== null) {
+        variables.push(match[1]);
+      }
+      return variables;
+    };
+
+    // Function to update the handles based on the text
+    const updateHandles = (e, fieldName) => {
+      if (e.key !== "Enter") return;
+
+      const currText = nodeData[fieldName];
+      const variables = extractVariables(currText);
+      console.log(variables);
+
+      if (variables.length !== 1) return;
+      const newHandles = {
+        name: variables[0],
+        position: Position.Left,
+        type: "source",
+      };
+      setHandles(newHandles);
+    };
 
     return (
       <Box
@@ -45,13 +83,14 @@ export const generateNodeComponent = (nodeDef, updateNodeData) => {
         </Typography>
         {nodeDef.fields.map((field) => {
           switch (field.type) {
-            case "text":
+            case "textArea" || "text":
               return (
                 <FormControl key={field.name} sx={{ mb: 2 }}>
                   <FormLabel>{field.name}</FormLabel>
                   <Input
                     value={nodeData[field.name] || ""}
                     onChange={(e) => handleChange(field.name, e.target.value)}
+                    onKeyDown={(e) => updateHandles(e, field.name)}
                     variant="outlined"
                     size="sm"
                     fullWidth
@@ -105,6 +144,26 @@ export const generateNodeComponent = (nodeDef, updateNodeData) => {
               type={handle.type}
               position={Position[handle.position]}
             />
+          ))}
+        {nodes
+          .filter((node) => node.id === id)
+          .map((node, index) => (
+            <React.Fragment key={index}>
+              {node?.handles?.length > 0 &&
+                node.handles.map((handle, ind) => {
+                  return (
+                    <Handle
+                      key={ind}
+                      type={handle.type}
+                      position={handle.position}
+                      id={handle.name}
+                      style={{top:`${ind }`}}
+                    >
+                      <div>{handle.name}</div>
+                    </Handle>
+                  );
+                })}
+            </React.Fragment>
           ))}
       </Box>
     );

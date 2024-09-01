@@ -1,39 +1,52 @@
 [
-    {
-      "type": "customInput",
-      "label": "Input",
-      "fields": [
-        { "name": "inputName", "type": "text", "default": "" },
-        {
-          "name": "inputType",
-          "type": "select",
-          "options": ["Text", "File"],
-          "default": "Text"
-        }
-      ]
-    },
-    {
-      "type": "llm",
-      "label": "LLM",
-      "fields": []
-    },
-    {
-      "type": "customOutput",
-      "label": "Output",
-      "fields": [
-        { "name": "outputName", "type": "text", "default": "" },
-        {
-          "name": "outputType",
-          "type": "select",
-          "options": ["Text", "Image"],
-          "default": "Text"
-        }
-      ]
-    },
-    {
-      "type": "text",
-      "label": "Text",
-      "fields": [{ "name": "text", "type": "text", "default": "{{input}}" }]
-    }
-  ]
-  
+  {
+    "type": "customInput",
+    "label": "Input",
+    "fields": [
+      { "name": "inputName", "type": "text", "default": "" },
+      {
+        "name": "inputType",
+        "type": "select",
+        "options": ["Text", "File"],
+        "default": "Text"
+      }
+    ],
+    "handles": [
+      {
+        "name": "llm",
+        "type": "source",
+        "position": "Right"
+      }
+    ]
+  },
+  {
+    "type": "llm",
+    "label": "LLM",
+    "fields": [],
+    "handles": [
+      {
+        "name": "",
+        "type": "target",
+        "position": "Right"
+      }
+    ]
+  },
+  {
+    "type": "customOutput",
+    "label": "Output",
+    "fields": [
+      { "name": "outputName", "type": "text", "default": "" },
+      {
+        "name": "outputType",
+        "type": "select",
+        "options": ["Text", "Image"],
+        "default": "Text"
+      }
+    ]
+  },
+  {
+    "type": "text",
+    "label": "Text",
+    "fields": [{ "name": "text", "type": "text", "default": "{{input}}" }]
+  }
+]
